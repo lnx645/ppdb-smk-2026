@@ -31,6 +31,7 @@ class AdminController extends Controller
             $query->where(function ($q) use ($s) {
                 $q->where('name', 'like', "%{$s}%")
                   ->orWhere('nisn', 'like', "%{$s}%")
+                  ->orWhere('nik', 'like', "%{$s}%")
                   ->orWhere('email', 'like', "%{$s}%");
             });
         }
@@ -80,11 +81,10 @@ class AdminController extends Controller
     {
         if ($redirect = $this->guard()) return $redirect;
 
-        if ($applicant->ijazah_path) {
-            \Storage::disk('public')->delete($applicant->ijazah_path);
-        }
-        if ($applicant->prestasi_proof) {
-            \Storage::disk('public')->delete($applicant->prestasi_proof);
+        foreach (Applicant::DOCUMENT_COLUMNS as $column) {
+            if ($applicant->{$column}) {
+                \Storage::disk('public')->delete($applicant->{$column});
+            }
         }
         $applicant->delete();
 

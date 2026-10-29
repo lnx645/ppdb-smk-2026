@@ -65,52 +65,10 @@
             @endif
         </div>
 
-        <!-- Detail -->
-        <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                <h3 class="font-extrabold">Detail Pendaftaran</h3>
-                <span class="text-[11px] font-bold bg-slate-100 text-slate-500 rounded-lg px-2.5 py-1">No. {{ str_pad($applicant->id, 5, '0', STR_PAD_LEFT) }}</span>
-            </div>
-            <dl class="divide-y divide-slate-100 text-sm">
-                @foreach([
-                    ['Nama Lengkap', $applicant->name],
-                    ['NISN', $applicant->nisn],
-                    ['Email', $applicant->email],
-                    ['No. HP', $applicant->phone],
-                    ['Jenis Kelamin', $applicant->gender === 'L' ? 'Laki-laki' : 'Perempuan'],
-                    ['Tanggal Lahir', $applicant->birth_date?->format('d M Y')],
-                    ['Alamat', $applicant->address],
-                    ['Asal Sekolah', $applicant->previous_school ?: '-'],
-                    ['Nomor SHUN', $applicant->shun ?: '-'],
-                    ['Jurusan', $majors[$applicant->major] ?? $applicant->major],
-                    ['Jalur', $jalurs[$applicant->jalur] ?? $applicant->jalur],
-                    ['Tahun Penerimaan', $applicant->admission_year],
-                ] as [$label, $value])
-                    <div class="px-6 py-3 flex flex-col sm:flex-row sm:gap-4">
-                        <dt class="sm:w-44 text-xs font-bold text-slate-400 uppercase tracking-wide shrink-0">{{ $label }}</dt>
-                        <dd class="text-slate-700">{{ $value }}</dd>
-                    </div>
-                @endforeach
-                <div class="px-6 py-3 flex flex-col sm:flex-row sm:gap-4">
-                    <dt class="sm:w-44 text-xs font-bold text-slate-400 uppercase tracking-wide shrink-0">Dokumen</dt>
-                    <dd class="space-y-1.5">
-                        @if($applicant->ijazah_path)
-                            <div class="text-emerald-700 font-semibold">✅ Ijazah / STT SMP —
-                                <a href="{{ asset('storage/' . $applicant->ijazah_path) }}" target="_blank" class="text-brand-700 hover:underline">Lihat berkas</a>
-                            </div>
-                        @else
-                            <div class="text-rose-600 font-semibold">❌ Ijazah / STT SMP — belum diunggah</div>
-                        @endif
-                        @if($applicant->prestasi_proof)
-                            <div class="text-emerald-700 font-semibold">✅ Bukti Prestasi —
-                                <a href="{{ asset('storage/' . $applicant->prestasi_proof) }}" target="_blank" class="text-brand-700 hover:underline">Lihat berkas</a>
-                            </div>
-                        @else
-                            <div class="text-slate-400">— Bukti Prestasi (opsional) — belum diunggah</div>
-                        @endif
-                    </dd>
-                </div>
-            </dl>
+        <!-- Detail lengkap sesuai F-PD -->
+        <div class="space-y-6">
+            @include('partials.applicant-data')
+            @include('partials.applicant-documents', ['title' => 'Berkas Pendukung'])
         </div>
 
         <p class="mt-4 text-xs text-slate-400 text-center">Tanggal daftar: {{ $applicant->created_at?->format('d M Y H:i') }} WIB</p>
